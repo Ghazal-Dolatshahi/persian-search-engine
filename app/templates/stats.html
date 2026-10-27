@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}گزارش نمایه‌سازی | غز غز{% endblock %}
+{% block body %}
+<header class="bar"><div class="bar__inner">
+  <a class="bar__brand" href="/"><span>غز غز</span></a>
+</div></header>
+<main class="results">
+  <h1 class="page-title">گزارش نمایه‌سازی</h1>
+  <table class="report">
+    <tr><th>تعداد اسناد نمایه‌شده</th><td>{{ stats.n_docs|fa }}</td></tr>
+    <tr><th>تعداد واژه‌های یکتا</th><td>{{ stats.n_terms|fa }}</td></tr>
+    <tr><th>تعداد پستینگ (واژه در سند)</th><td>{{ stats.n_postings|fa }}</td></tr>
+    <tr><th>میانگین طول عنوان</th><td>{{ stats.avg_title_len|fa(1) }} واژه</td></tr>
+    <tr><th>میانگین طول بدنه</th><td>{{ stats.avg_body_len|fa(1) }} واژه</td></tr>
+    <tr><th>زمان پارس HTML</th><td>{{ stats.parse_seconds|fa(2) }} ثانیه</td></tr>
+    <tr><th>زمان ساخت نمایه</th><td>{{ stats.index_seconds|fa(2) }} ثانیه</td></tr>
+    <tr><th>زمان کل نمایه‌سازی</th><td>{{ stats.total_seconds|fa(2) }} ثانیه</td></tr>
+    <tr><th>حجم HTML خام</th><td>{{ stats.raw_html_bytes|human_bytes }}</td></tr>
+    <tr><th>حجم فایل نمایه</th><td>{{ stats.index_bytes|human_bytes }}</td></tr>
+    <tr><th>زمان ساخت</th><td dir="ltr">{{ stats.built_at }}</td></tr>
+  </table>
+</main>
+{% endblock %}

@@ -1,0 +1,18 @@
+services:
+  search:
+    build:
+      context: .
+      args:
+        PYTHON_IMAGE: ${PYTHON_IMAGE:-python:3.12-slim}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    image: ghez-ghez:latest
+    container_name: ghez-ghez
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data:ro      # خروجی کرالر (jsonl / json / csv یا پوشه‌ی html)
+      - ./index:/index       # نمایه‌ی ساخته‌شده اینجا ذخیره می‌شود
+    environment:
+      - STRIP_BOILERPLATE=1  # حذف nav/header/footer از متن بدنه (0 = نگه‌داشتن همه‌ی متن)
+      - REBUILD=0            # 1 = ساخت مجدد نمایه در هر بار اجرا
+    restart: unless-stopped

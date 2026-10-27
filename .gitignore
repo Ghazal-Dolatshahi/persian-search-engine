@@ -1,0 +1,11 @@
+data/*
+!data/.gitkeep
+index/*
+!index/.gitkeep
+.env
+__pycache__/
+*.pyc
+.venv/
+.vscode/
+.idea/
+.DS_Store

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% from "_search.html" import search_box %}
+{% block title %}{{ q }} | غز غز{% endblock %}
+{% block body %}
+<header class="bar">
+  <div class="bar__inner">
+    <a class="bar__brand" href="/" aria-label="صفحه اصلی">
+      <svg viewBox="0 0 48 48" width="32" height="32" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="45" height="45" rx="14" stroke="#2a3550" stroke-width="2"/><circle cx="22" cy="22" r="8" stroke="#6c9cff" stroke-width="3"/><path d="m28 28 8 8" stroke="#6c9cff" stroke-width="3" stroke-linecap="round"/></svg>
+      <span>غز غز</span>
+    </a>
+    {{ search_box(q) }}
+  </div>
+</header>
+
+<main class="results">
+  {% if res.corrected %}
+  <p class="fix">نتایج برای <a href="/search?q={{ res.corrected|urlencode }}"><strong>{{ res.corrected }}</strong></a> نمایش داده شده است.
+    <a class="fix__orig" href="/search?q={{ q|urlencode }}&raw=1">جستجو برای «{{ q }}»</a></p>
+  {% endif %}
+
+  {% if res.total %}
+  <p class="meta">{{ res.total|fa }} نتیجه در {{ res.took_ms|fa(1) }} میلی‌ثانیه</p>
+  <ol class="hits">
+    {% for r in res.results %}
+    <li class="hit">
+      <a class="hit__url" href="{{ r.url }}" target="_blank" rel="noopener" dir="ltr">{{ r.url|crumbs }}</a>
+      <h2 class="hit__title"><a href="{{ r.url }}" target="_blank" rel="noopener">{{ r.title_html|safe }}</a></h2>
+      <p class="hit__snippet">{{ r.snippet_html|safe }}</p>
+      <span class="hit__score" title="امتیاز رتبه‌بندی">امتیاز {{ r.score|fa(2) }}</span>
+    </li>
+    {% endfor %}
+  </ol>
+
+  {% if res.pages > 1 %}
+  {% set base = "/search?q=" ~ (q|urlencode) ~ ("&raw=1" if raw else "") %}
+  <nav class="pager" aria-label="صفحه‌بندی">
+    {% if res.page > 1 %}<a href="{{ base }}&page={{ res.page - 1 }}">قبلی</a>{% endif %}
+    {% for p in range(1, res.pages + 1) %}
+      {% if p == res.page %}<span aria-current="page">{{ p|fa }}</span>
+      {% elif (p - res.page)|abs <= 2 or p == 1 or p == res.pages %}<a href="{{ base }}&page={{ p }}">{{ p|fa }}</a>
+      {% elif (p - res.page)|abs == 3 %}<span class="gap">…</span>{% endif %}
+    {% endfor %}
+    {% if res.page < res.pages %}<a href="{{ base }}&page={{ res.page + 1 }}">بعدی</a>{% endif %}
+  </nav>
+  {% endif %}
+
+  {% elif not res.terms %}
+  <section class="empty"><h2>عبارتی وارد نشده است</h2><p>یک یا چند کلمه بنویسید؛ همه‌ی کلمه‌ها باید در صفحه باشند.</p></section>
+  {% else %}
+  <section class="empty">
+    <h2>نتیجه‌ای برای «{{ q }}» پیدا نشد</h2>
+    <p>جستجو به‌صورت AND انجام می‌شود و همه‌ی کلمه‌ها باید در یک صفحه باشند. املای کلمه‌ها را بررسی کنید یا کلمه‌های کمتری بنویسید.</p>
+  </section>
+  {% endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_search.html" import search_box %}
+{% block title %}غز غز | جستجو در تکنولایف{% endblock %}
+{% block body %}
+<main class="home">
+  <div class="home__inner">
+    <svg class="mark" viewBox="0 0 48 48" width="52" height="52" fill="none" aria-hidden="true">
+      <rect x="1.5" y="1.5" width="45" height="45" rx="14" stroke="#2a3550" stroke-width="1.5"/>
+      <circle cx="22" cy="22" r="8" stroke="#6c9cff" stroke-width="2.4"/>
+      <path d="m28 28 8 8" stroke="#6c9cff" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>
+    <h1 class="wordmark">غز غز</h1>
+    <p class="tagline">موتور جستجوی صفحات تکنولایف</p>
+
+    {{ search_box(big=True, autofocus=True) }}
+
+    <div class="chips" aria-label="نمونه جستجو">
+      {% for e in examples %}<a href="/search?q={{ e|urlencode }}">{{ e }}</a>{% endfor %}
+    </div>
+
+    {% if stats.n_docs %}
+    <dl class="facts">
+      <div><dd>{{ stats.n_docs|fa }}</dd><dt>صفحه نمایه‌شده</dt></div>
+      <div><dd>{{ stats.n_terms|fa }}</dd><dt>واژه‌ی یکتا</dt></div>
+      <div><dd>{{ stats.total_seconds|fa(2) }}</dd><dt>ثانیه زمان نمایه‌سازی</dt></div>
+    </dl>
+    {% else %}
+    <p class="notice">هنوز صفحه‌ای نمایه نشده است. خروجی کرالر را داخل پوشه‌ی <code>data/</code> بگذارید و برنامه را دوباره اجرا کنید.</p>
+    {% endif %}
+  </div>
+  <footer class="foot"><a href="/stats">گزارش نمایه‌سازی</a></footer>
+</main>
+{% endblock %}
